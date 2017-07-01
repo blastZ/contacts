@@ -1,37 +1,35 @@
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 import ListContacts from './ListContacts'
+import CreateContact from './CreateContact'
+import * as ContactsAPI from './utils/ContactsAPI'
 
 class App extends Component {
     state = {
-        contacts: [
-            {
-                "id": "ryan",
-                "name": "Ryan Florence",
-                "email": "ryan@reacttraining.com",
-                "avatarURL": "http://localhost:5001/ryan.jpg"
-            },
-            {
-                "id": "michael",
-                "name": "Michael Jackson",
-                "email": "michael@reacttraining.com",
-                "avatarURL": "http://localhost:5001/michael.jpg"
-            },
-            {
-                "id": "tyler",
-                "name": "Tyler McGinnis",
-                "email": "tyler@reacttraining.com",
-                "avatarURL": "http://localhost:5001/tyler.jpg"
-            }
-        ]
+        screen: 'list',
+        contacts: []
+    }
+    componentDidMount() {
+        ContactsAPI.getAll().then((contacts => this.setState({contacts: contacts})))
     }
     removeContact = (person) => {
         this.setState((state) => ({
             contacts: state.contacts.filter((contact) => person.id !== contact.id)
-        }))
+        }));
+        ContactsAPI.remove(person);
+    }
+    createContact = () => {
+        this.setState({screen: 'create'})
     }
     render() {
         return (
-            <ListContacts onDeleteContact={this.removeContact} contacts={this.state.contacts}/>
+            <div className="app">
+                {this.state.screen === 'list' && (
+                    <ListContacts onCreateContact={this.createContact} onDeleteContact={this.removeContact} contacts={this.state.contacts}/>
+                )}
+                {this.state.screen === 'create' && (
+                    <CreateContact/>
+                )}
+            </div>
         )
     }
 }
