@@ -74,6 +74,10 @@ body, .app {
   outline: 0;
 }
 
+.create-contact-details button:hover {
+    cursor: pointer;
+}
+
 /* ListContacts */
 
 .list-contacts {
